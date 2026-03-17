@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detection Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+  </head>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Modern Detection Dashboard</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-body p-0">
+              <img id="video" src="/video_feed" class="img-fluid w-100" alt="video stream">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Live Counts</h5>
+              <div class="d-flex justify-content-between align-items-center my-3">
+                <div>
+                  <h6 class="mb-0">Dogs</h6>
+                  <p id="dog-count" class="display-6 text-primary mb-0">0</p>
+                </div>
+                <div>
+                  <h6 class="mb-0">Phones</h6>
+                  <p id="phone-count" class="display-6 text-success mb-0">0</p>
+                </div>
+              </div>
+              <p class="text-muted small">Detection powered by YOLOv8 (ultralytics).</p>
+            </div>
+          </div>
+
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6>Controls</h6>
+              <p class="small text-muted">Restart the app to change model file or camera settings.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function pollCounts(){
+        try{
+          const res = await fetch('/counts');
+          const data = await res.json();
+          document.getElementById('dog-count').textContent = data.dog;
+          document.getElementById('phone-count').textContent = data.phone;
+        }catch(e){/* ignore */}
+      }
+      setInterval(pollCounts, 500);
+      pollCounts();
+    </script>
+  </body>
+</html>
